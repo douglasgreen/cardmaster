@@ -4,8 +4,8 @@
     "description": "Single-user flashcard review program",
     "license": "MIT",
     "devDependencies": {
-        "eslint": "^8.41.0",
-        "prettier": "^2.8.8"
+        "eslint": "^9.39",
+        "prettier": "^3.6"
     },
     "scripts": {
         "fix": "eslint --fix .",
