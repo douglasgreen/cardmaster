@@ -1,13 +1,14 @@
 #!/usr/bin/php
 <?php
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use CardMaster\CardManager;
 use CardMaster\DatabaseManager;
 use CardMaster\DeckManager;
 
-if ($argc != 2 || !is_dir($argv[1])) {
-    die("Usage: " . basename($argv[0]) . " DIRNAME\n");
+if ($argc !== 2 || !is_dir($argv[1])) {
+    die('Usage: ' . basename($argv[0]) . " DIRNAME\n");
 }
 $dirname = $argv[1];
 
@@ -29,7 +30,7 @@ $allFlashcards = $cardManager->readAll();
 $fp = fopen('flashcards.csv', 'w');
 
 // Write the header row
-fputcsv($fp, array('deck_name', 'card_answer', 'card_question'));
+fputcsv($fp, ['deck_name', 'card_answer', 'card_question']);
 
 // Write the data rows
 foreach ($allFlashcards as $flashcard) {

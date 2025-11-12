@@ -13,7 +13,7 @@ $dbManager = new DatabaseManager($configFilePath);
 $pdo = $dbManager->getConnection()
 
 // Get all cards
-$sql = "SELECT * FROM `Cards` ORDER BY `deck_id`, `card_question`";
+$sql = 'SELECT * FROM `Cards` ORDER BY `deck_id`, `card_question`';
 $result = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 $cards = [];
@@ -39,11 +39,11 @@ try {
     foreach ($cards as $key => $card) {
         if (!empty($card['delete_ids'])) {
             // Update the row with combined card_answer
-            $sql = "UPDATE `Cards` SET `card_answer` = ? WHERE `card_id` = ?";
+            $sql = 'UPDATE `Cards` SET `card_answer` = ? WHERE `card_id` = ?';
             $pdo->prepare($sql)->execute([$card['card_answer'], $card['update_id']]);
             echo $card['card_answer'] . "\n";
             // Delete duplicate rows
-            $sql = "DELETE FROM `Cards` WHERE `card_id` IN (" . implode(',', $card['delete_ids']) . ")";
+            $sql = 'DELETE FROM `Cards` WHERE `card_id` IN (' . implode(',', $card['delete_ids']) . ')';
             $pdo->exec($sql);
         }
     }

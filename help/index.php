@@ -8,8 +8,8 @@ use CardMaster\Page;
 $app = new Application();
 
 $page = new Page($app);
-$page->addCss("common.css");
-$page->addCss("header.css");
+$page->addCss('common.css');
+$page->addCss('header.css');
 $page->printHeader();
 $page->printNavbar();
 

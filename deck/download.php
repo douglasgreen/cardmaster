@@ -4,7 +4,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use CardMaster\Application;
 use CardMaster\CardManager;
-use CardMaster\DeckManager;
 
 try {
     $app = new Application();
@@ -36,6 +35,11 @@ try {
 } catch (Exception $e) {
     header('Content-Type: application/json');
 
-    http_response_code(400); // return a custom status code
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    http_response_code(400);
+    echo json_encode(
+        [
+            'status' => 'error',
+            'message' => $e->getMessage(),
+        ]
+    );
 }

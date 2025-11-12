@@ -7,14 +7,14 @@ use CardMaster\Page;
 
 $app = new Application();
 $page = new Page($app);
-$page->addCss("common.css");
-$page->addCss("header.css");
-$page->addCss("card/card.css");
-$page->addJs("https://code.jquery.com/jquery-3.7.0.min.js");
-$page->addJs("error_handler.js");
-$page->addJs("card/card.js");
-$page->addJs("card/color_code.js");
-$page->addJs("card/text_to_speech.js");
+$page->addCss('common.css');
+$page->addCss('header.css');
+$page->addCss('card/card.css');
+$page->addJs('https://code.jquery.com/jquery-3.7.0.min.js');
+$page->addJs('error_handler.js');
+$page->addJs('card/card.js');
+$page->addJs('card/color_code.js');
+$page->addJs('card/text_to_speech.js');
 $page->printHeader();
 $page->printNavbar();
 

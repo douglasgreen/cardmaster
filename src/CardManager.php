@@ -2,7 +2,6 @@
 
 namespace CardMaster;
 
-use Exception;
 use PDO;
 
 class CardManager
@@ -23,8 +22,12 @@ class CardManager
         $this->deckManager = new DeckManager($pdo);
     }
 
-    public function create(int $deckId, string $cardAnswer, string $cardQuestion, ?string $cardNote = null): string
-    {
+    public function create(
+        int $deckId,
+        string $cardAnswer,
+        string $cardQuestion,
+        ?string $cardNote = null
+    ): string {
         $this->deckManager->mustBeOwnedByUser($deckId);
         $query = <<<SQL
             INSERT INTO
@@ -37,19 +40,21 @@ class CardManager
             SQL;
         $stmt = $this->pdo->prepare($query);
         $cardNote = strlen(trim($cardNote)) > 0 ? trim($cardNote) : null;
-        $stmt->execute([
-            'deckId' => $deckId,
-            'cardAnswer' => $cardAnswer,
-            'cardQuestion' => $cardQuestion,
-            'cardNote' => $cardNote
-        ]);
+        $stmt->execute(
+            [
+                'deckId' => $deckId,
+                'cardAnswer' => $cardAnswer,
+                'cardQuestion' => $cardQuestion,
+                'cardNote' => $cardNote,
+            ]
+        );
         $cardId = $this->pdo->lastInsertId();
         return $cardId;
     }
 
     public function delete(int $cardId): void
     {
-        $stmt = $this->pdo->prepare("DELETE FROM Cards WHERE cardId = ?");
+        $stmt = $this->pdo->prepare('DELETE FROM Cards WHERE cardId = ?');
         $stmt->execute([$cardId]);
     }
 
@@ -137,16 +142,17 @@ class CardManager
 
         return null;
     }
+
     public function read(int $cardId): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM Cards WHERE cardId = ?");
+        $stmt = $this->pdo->prepare('SELECT * FROM Cards WHERE cardId = ?');
         $stmt->execute([$cardId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function readAll(): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM Cards");
+        $stmt = $this->pdo->prepare('SELECT * FROM Cards');
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -163,14 +169,19 @@ class CardManager
                 deckId = :deckId
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([
-            ':deckId' => $deckId
-        ]);
+        $stmt->execute(
+            [':deckId' => $deckId]
+        );
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function updateAttempts(int $cardId, string $lastAttempt, int $correctAttempts, float $score, float $timeTaken): void
-    {
+    public function updateAttempts(
+        int $cardId,
+        string $lastAttempt,
+        int $correctAttempts,
+        float $score,
+        float $timeTaken
+    ): void {
         $query = <<<SQL
             UPDATE
                 Cards
@@ -185,17 +196,23 @@ class CardManager
             SQL;
 
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([
-            'lastAttempt' => $lastAttempt,
-            'correctAttempts' => $correctAttempts,
-            'totalScore' => $score,
-            'totalTime' => $timeTaken,
-            'cardId' => $cardId
-        ]);
+        $stmt->execute(
+            [
+                'lastAttempt' => $lastAttempt,
+                'correctAttempts' => $correctAttempts,
+                'totalScore' => $score,
+                'totalTime' => $timeTaken,
+                'cardId' => $cardId,
+            ]
+        );
     }
 
-    public function updateText(int $cardId, string $cardAnswer, string $cardQuestion, ?string $cardNote): void
-    {
+    public function updateText(
+        int $cardId,
+        string $cardAnswer,
+        string $cardQuestion,
+        ?string $cardNote
+    ): void {
         $query = <<<SQL
             UPDATE
                 Cards
@@ -215,40 +232,57 @@ class CardManager
         $stmt->execute([$cardAnswer, $cardQuestion, $cardNote, $cardId]);
     }
 
-    public function checkForDuplicateAnswer(int $deckId, string $cardAnswer, string $cardQuestion): bool
-    {
-        $dupAnswerQuery = "SELECT COUNT(*) AS count FROM Cards WHERE deckId = :deckId AND cardAnswer = :cardAnswer";
+    public function checkForDuplicateAnswer(
+        int $deckId,
+        string $cardAnswer,
+        string $cardQuestion
+    ): bool {
+        $dupAnswerQuery = 'SELECT COUNT(*) AS count FROM Cards WHERE deckId = :deckId AND cardAnswer = :cardAnswer';
         $stmt = $this->pdo->prepare($dupAnswerQuery);
-        $stmt->execute([
-            ':deckId' => $deckId,
-            ':cardAnswer' => $cardAnswer,
-        ]);
+        $stmt->execute(
+            [
+                ':deckId' => $deckId,
+                ':cardAnswer' => $cardAnswer,
+            ]
+        );
         $dupAnswer = $stmt->fetch(PDO::FETCH_ASSOC)['count'] > 0;
 
         return $dupAnswer;
     }
 
-    public function overwriteCardAnswer(int $deckId, string $cardAnswer, string $cardQuestion, ?string $cardNote): void
-    {
-        $overwriteQuery = "UPDATE Cards SET cardAnswer = :cardAnswer, cardQuestion = :cardQuestion, cardNote = :cardNote WHERE deckId = :deckId AND cardAnswer = :cardAnswer";
+    public function overwriteCardAnswer(
+        int $deckId,
+        string $cardAnswer,
+        string $cardQuestion,
+        ?string $cardNote
+    ): void {
+        $overwriteQuery = 'UPDATE Cards SET cardAnswer = :cardAnswer, cardQuestion = :cardQuestion, cardNote = :cardNote WHERE deckId = :deckId AND cardAnswer = :cardAnswer';
         $stmt = $this->pdo->prepare($overwriteQuery);
-        $stmt->execute([
-            ':cardAnswer' => $cardAnswer,
-            ':cardQuestion' => $cardQuestion,
-            ':cardNote' => $cardNote,
-            ':deckId' => $deckId,
-        ]);
+        $stmt->execute(
+            [
+                ':cardAnswer' => $cardAnswer,
+                ':cardQuestion' => $cardQuestion,
+                ':cardNote' => $cardNote,
+                ':deckId' => $deckId,
+            ]
+        );
     }
 
-    public function overwriteCardQuestion(int $deckId, string $cardAnswer, string $cardQuestion, ?string $cardNote): void
-    {
-        $overwriteQuery = "UPDATE Cards SET cardAnswer = :cardAnswer, cardQuestion = :cardQuestion, cardNote = :cardNote WHERE deckId = :deckId AND cardQuestion = :cardQuestion";
+    public function overwriteCardQuestion(
+        int $deckId,
+        string $cardAnswer,
+        string $cardQuestion,
+        ?string $cardNote
+    ): void {
+        $overwriteQuery = 'UPDATE Cards SET cardAnswer = :cardAnswer, cardQuestion = :cardQuestion, cardNote = :cardNote WHERE deckId = :deckId AND cardQuestion = :cardQuestion';
         $stmt = $this->pdo->prepare($overwriteQuery);
-        $stmt->execute([
-            ':cardAnswer' => $cardAnswer,
-            ':cardQuestion' => $cardQuestion,
-            ':cardNote' => $cardNote,
-            ':deckId' => $deckId,
-        ]);
+        $stmt->execute(
+            [
+                ':cardAnswer' => $cardAnswer,
+                ':cardQuestion' => $cardQuestion,
+                ':cardNote' => $cardNote,
+                ':deckId' => $deckId,
+            ]
+        );
     }
 }

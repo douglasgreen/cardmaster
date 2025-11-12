@@ -4,8 +4,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use CardMaster\Application;
 use CardMaster\CardManager;
-use CardMaster\DeckManager;
-use CardMaster\LanguageManager;
 
 header('Content-Type: application/json');
 
@@ -28,6 +26,11 @@ try {
         throw new Exception('Missing parameters');
     }
 } catch (Exception $e) {
-    http_response_code(400); // return a custom status code
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    http_response_code(400);
+    echo json_encode(
+        [
+            'status' => 'error',
+            'message' => $e->getMessage(),
+        ]
+    );
 }

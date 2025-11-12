@@ -30,7 +30,12 @@ try {
 
         $cardQuestionLangId = $_POST['cardQuestionLangId'] ? (int) $_POST['cardQuestionLangId'] : null;
         $cardAnswerLangId = $_POST['cardAnswerLangId'] ? (int) $_POST['cardAnswerLangId'] : null;
-        $deckId = $deckManager->create($_POST['deckName'], $deckNote, $cardQuestionLangId, $cardAnswerLangId);
+        $deckId = $deckManager->create(
+            $_POST['deckName'],
+            $deckNote,
+            $cardQuestionLangId,
+            $cardAnswerLangId
+        );
 
         $cardManager = new CardManager($pdo);
 
@@ -50,6 +55,11 @@ try {
         throw new Exception('Deck file not found');
     }
 } catch (Exception $e) {
-    http_response_code(400); // return a custom status code
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    http_response_code(400);
+    echo json_encode(
+        [
+            'status' => 'error',
+            'message' => $e->getMessage(),
+        ]
+    );
 }

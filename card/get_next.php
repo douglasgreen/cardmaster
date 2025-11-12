@@ -13,7 +13,7 @@ try {
     $app = new Application();
     $pdo = $app->getPdo();
 
-// Create new instances of flashcard classes.
+    // Create new instances of flashcard classes.
     $deckManager = new DeckManager($pdo);
     $cardManager = new CardManager($pdo);
     $languageManager = new LanguageManager($pdo);
@@ -23,9 +23,18 @@ try {
         echo json_encode(['card' => null]);
     } else {
         $deck = $deckManager->read($nextCard['deckId']);
-        $questionLanguage = $deck['cardQuestionLangId'] ? $languageManager->read($deck['cardQuestionLangId']) : null;
-        $answerLanguage = $deck['cardAnswerLangId'] ? $languageManager->read($deck['cardAnswerLangId']) : null;
-        $data = ['card' => $nextCard, 'deck' => $deck, 'questionLanguage' => $questionLanguage, 'answerLanguage' => $answerLanguage];
+        $questionLanguage = $deck['cardQuestionLangId'] ? $languageManager->read(
+            $deck['cardQuestionLangId']
+        ) : null;
+        $answerLanguage = $deck['cardAnswerLangId'] ? $languageManager->read(
+            $deck['cardAnswerLangId']
+        ) : null;
+        $data = [
+            'card' => $nextCard,
+            'deck' => $deck,
+            'questionLanguage' => $questionLanguage,
+            'answerLanguage' => $answerLanguage
+        ];
         if (isset($nextCard['reviewCount'])) {
             $data['reviewCount'] = $nextCard['reviewCount'];
         } elseif (isset($nextCard['newCount'])) {
@@ -36,6 +45,11 @@ try {
         echo json_encode($data);
     }
 } catch (Exception $e) {
-    http_response_code(400); // return a custom status code
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    http_response_code(400);
+    echo json_encode(
+        [
+            'status' => 'error',
+            'message' => $e->getMessage(),
+        ]
+    );
 }

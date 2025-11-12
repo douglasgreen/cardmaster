@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use CardMaster\CardManager;
@@ -7,8 +8,11 @@ use CardMaster\DatabaseManager;
 use CardMaster\DeckManager;
 use CardMaster\Input;
 
-readline_callback_handler_install('', function () {
-});
+readline_callback_handler_install(
+    '',
+    function () {
+    }
+);
 
 // Define the database configuration file path and CSV file path
 $configFilePath = __DIR__ . '/../config.ini';
@@ -30,14 +34,14 @@ do {
         // Print the card question
         $deck = $deckManager->readDeck($nextCard['deck_id']);
         echo "\nDeck: " . $deck['deck_name'] . "\n";
-        echo "Question: " . $nextCard['card_question'] . "\n";
+        echo 'Question: ' . $nextCard['card_question'] . "\n";
         echo "Press any key to see the answer...\n";
 
         // Wait for any key to be pressed
         $ignore = Input::getChar();
 
         // Print the card answer
-        echo "Answer: " . $nextCard['card_answer'] . "\n";
+        echo 'Answer: ' . $nextCard['card_answer'] . "\n";
 
         // Wait for user to input Y or N
         do {
@@ -51,7 +55,11 @@ do {
             $last_attempt = new DateTime();
             $correct_attempts = $nextCard['correct_attempts'] ?? 0;
             $correct_attempts += $response === 'Y' ? 1 : -1;
-            $cardManager->updateAttempts($nextCard['card_id'], $last_attempt->format('Y-m-d H:i:s'), $correct_attempts);
+            $cardManager->updateAttempts(
+                $nextCard['card_id'],
+                $last_attempt->format('Y-m-d H:i:s'),
+                $correct_attempts
+            );
         }
     }
 } while ($nextCard !== null && $response !== 'X');

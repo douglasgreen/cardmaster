@@ -8,8 +8,11 @@ use PDO;
 class Application
 {
     private $basePath;
+
     private $baseUrl;
+
     private $config;
+
     private $pdo;
 
     public function __construct()
@@ -27,11 +30,13 @@ class Application
         $this->pdo = $dbManager->getConnection();
     }
 
-    public function getAbsoluteUrl($relativePath) {
+    public function getAbsoluteUrl($relativePath)
+    {
         return $this->baseUrl . $relativePath;
     }
 
-    public function getBaseUrl() {
+    public function getBaseUrl()
+    {
         $serverName = $_SERVER['SERVER_NAME'];
         $requestUri = $_SERVER['REQUEST_URI'];
 
@@ -45,15 +50,14 @@ class Application
         if ($prognamePosition !== false) {
             $baseUrl = substr($requestUri, 0, $prognamePosition) . $progDir . '/';
             return 'https://' . $serverName . $baseUrl;
-        } else {
-            throw new Exception("Base URL not found");
         }
+        throw new Exception('Base URL not found');
     }
 
     public function getConfigSection(string $section): array
     {
         if (!isset($this->config[$section])) {
-            throw new Exception("Section not found");
+            throw new Exception('Section not found');
         }
         return $this->config[$section];
     }

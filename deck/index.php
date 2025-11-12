@@ -13,12 +13,12 @@ $deckManager = new DeckManager($pdo);
 $deckNames = $deckManager->readNames();
 
 $page = new Page($app);
-$page->addCss("common.css");
-$page->addCss("header.css");
-$page->addCss("deck/deck.css");
-$page->addJs("https://code.jquery.com/jquery-3.7.0.min.js");
-$page->addJs("error_handler.js");
-$page->addJs("deck/deck.js");
+$page->addCss('common.css');
+$page->addCss('header.css');
+$page->addCss('deck/deck.css');
+$page->addJs('https://code.jquery.com/jquery-3.7.0.min.js');
+$page->addJs('error_handler.js');
+$page->addJs('deck/deck.js');
 $page->printHeader();
 $page->printNavbar();
 
@@ -60,7 +60,7 @@ $page->printNavbar();
                 <label for="deckId">Select Deck:</label><br>
                 <select id="deckId" name="deckId" required>
                     <option value=""></option>
-                    <?php foreach ($deckNames as $deckName): ?>
+                    <?php foreach ($deckNames as $deckName) : ?>
                         <option value="<?php echo $deckName['deckId']; ?>">
                             <?php echo htmlspecialchars($deckName['deckName'], ENT_QUOTES); ?>
                         </option>
@@ -91,7 +91,7 @@ $page->printNavbar();
                 <label for="exportDeckId">Select Deck:</label><br>
                 <select id="exportDeckId" name="exportDeckId" required>
                     <option value=""></option>
-                    <?php foreach ($deckNames as $deckName): ?>
+                    <?php foreach ($deckNames as $deckName) : ?>
                         <option value="<?php echo $deckName['deckId']; ?>">
                             <?php echo htmlspecialchars($deckName['deckName'], ENT_QUOTES); ?>
                         </option>
@@ -105,5 +105,4 @@ $page->printNavbar();
         </div>
     </div>
 <?php
-
 $page->printFooter();

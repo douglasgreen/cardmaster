@@ -1,13 +1,14 @@
 #!/usr/bin/php
 <?php
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use CardMaster\CardManager;
 use CardMaster\DatabaseManager;
 use CardMaster\DeckManager;
 
-if ($argc != 2) {
-    die("Usage: " . basename($argv[0]) . " FILENAME\n");
+if ($argc !== 2) {
+    die('Usage: ' . basename($argv[0]) . " FILENAME\n");
 }
 $csvFileName = $argv[1];
 
@@ -24,7 +25,7 @@ $cardManager = new CardManager($pdo);
 
 // Open the CSV file
 if (($handle = fopen($csvFileName, 'r')) === false) {
-    die("Could not open file '$csvFileName'.\n");
+    die("Could not open file '{$csvFileName}'.\n");
 }
 
 // Assume that a flashcard deck has been created for this CSV file
@@ -37,7 +38,7 @@ $deck_id = $pdo->lastInsertId();
 while (($data = fgetcsv($handle)) !== false) {
     // Skip if the line does not have two fields
     if (count($data) < 2) {
-        echo "Skipping line in $deck_name: " . var_export($data, true);
+        echo "Skipping line in {$deck_name}: " . var_export($data, true);
         continue;
     }
 
@@ -52,4 +53,4 @@ while (($data = fgetcsv($handle)) !== false) {
 // Close the CSV file
 fclose($handle);
 
-echo "Successfully imported flashcards from '$csvFileName' into deck with ID $deck_id.\n";
+echo "Successfully imported flashcards from '{$csvFileName}' into deck with ID {$deck_id}.\n";

@@ -26,23 +26,25 @@ class LanguageManager
                 ietfTag = :ietfTag
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([
-            ':langName' => $langName,
-            ':ietfTag' => $ietfTag
-        ]);
+        $stmt->execute(
+            [
+                ':langName' => $langName,
+                ':ietfTag' => $ietfTag,
+            ]
+        );
         return $this->pdo->lastInsertId();
     }
 
     public function delete(int $langId): void
     {
-        $sql = "DELETE FROM Languages WHERE langId = :langId";
+        $sql = 'DELETE FROM Languages WHERE langId = :langId';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':langId' => $langId]);
     }
 
     public function read(int $langId): array
     {
-        $sql = "SELECT * FROM Languages WHERE langId = :langId";
+        $sql = 'SELECT * FROM Languages WHERE langId = :langId';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':langId' => $langId]);
         return $stmt->fetch();
@@ -50,7 +52,7 @@ class LanguageManager
 
     public function readAll(): array
     {
-        $stmt = $this->pdo->query("SELECT * FROM Languages ORDER BY langName");
+        $stmt = $this->pdo->query('SELECT * FROM Languages ORDER BY langName');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -66,6 +68,12 @@ class LanguageManager
                 langId = :langId
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':langName' => $langName, ':ietfTag' => $ietfTag, ':langId' => $langId]);
+        $stmt->execute(
+            [
+                ':langName' => $langName,
+                ':ietfTag' => $ietfTag,
+                ':langId' => $langId
+            ]
+        );
     }
 }

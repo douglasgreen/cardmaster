@@ -36,12 +36,14 @@ class DeckManager
                 (:deckName, :deckNote, :question, :answer, 1)
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([
-            ':deckName' => $deckName,
-            ':deckNote' => $deckNote ?: null,
-            ':question' => $cardQuestionLangId ?: null,
-            ':answer' => $cardAnswerLangId ?: null
-        ]);
+        $stmt->execute(
+            [
+                ':deckName' => $deckName,
+                ':deckNote' => $deckNote ?: null,
+                ':question' => $cardQuestionLangId ?: null,
+                ':answer' => $cardAnswerLangId ?: null,
+            ]
+        );
 
         $deckId = $this->pdo->lastInsertId();
         return $deckId;
@@ -49,7 +51,7 @@ class DeckManager
 
     public function delete(int $deckId): void
     {
-        $stmt = $this->pdo->prepare("DELETE FROM Decks WHERE deckId = ?");
+        $stmt = $this->pdo->prepare('DELETE FROM Decks WHERE deckId = ?');
         $stmt->execute([$deckId]);
     }
 
@@ -75,8 +77,12 @@ class DeckManager
         $stmt->execute();
         $rows = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $row['percentCorrect'] = $row['sumAllAttempts'] ? round($row['sumCorrectAttempts'] / $row['sumAllAttempts'] * 100) : 0;
-            $row['percentMastered'] = $row['cardCount'] ? round($row['masteredQuestions'] / $row['cardCount'] * 100) : 0;
+            $row['percentCorrect'] = $row['sumAllAttempts'] ? round(
+                $row['sumCorrectAttempts'] / $row['sumAllAttempts'] * 100
+            ) : 0;
+            $row['percentMastered'] = $row['cardCount'] ? round(
+                $row['masteredQuestions'] / $row['cardCount'] * 100
+            ) : 0;
             $rows[] = $row;
         }
         return $rows;
@@ -84,14 +90,14 @@ class DeckManager
 
     public function read(int $deckId): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM Decks WHERE deckId = ?");
+        $stmt = $this->pdo->prepare('SELECT * FROM Decks WHERE deckId = ?');
         $stmt->execute([$deckId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function readByName(string $deckName): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM Decks WHERE deckName = ?");
+        $stmt = $this->pdo->prepare('SELECT * FROM Decks WHERE deckName = ?');
         $stmt->execute([$deckName]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $deckId = $row['deckId'];
@@ -125,9 +131,17 @@ class DeckManager
                 deckId = :deckId
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':deckName' => $newName, ':deckId' => $deckId]);
+        $stmt->execute(
+            [
+                ':deckName' => $newName,
+                ':deckId' => $deckId
+            ]
+        );
 
-        return ['deckId' => $deckId, 'deckName' => $newName];
+        return [
+            'deckId' => $deckId,
+            'deckName' => $newName,
+        ];
     }
 
     public function resetCards(int $deckId): void
@@ -144,18 +158,18 @@ class DeckManager
                 deckId = :deckId
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([
-            ':deckId' => $deckId
-        ]);
+        $stmt->execute(
+            [':deckId' => $deckId]
+        );
     }
 
     public function toggleActive(int $deckId): array
     {
-        $stmt = $this->pdo->prepare("SELECT deckActive FROM Decks WHERE deckId = :deckId");
+        $stmt = $this->pdo->prepare('SELECT deckActive FROM Decks WHERE deckId = :deckId');
         $stmt->execute([':deckId' => $deckId]);
         $deck = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $newActiveState = $deck['deckActive'] ? "0" : "1";
+        $newActiveState = $deck['deckActive'] ? '0' : '1';
 
         $query = <<<SQL
             UPDATE
@@ -166,7 +180,12 @@ class DeckManager
                 deckId = :deckId
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':deckActive' => $newActiveState, ':deckId' => $deckId]);
+        $stmt->execute(
+            [
+                ':deckActive' => $newActiveState,
+                ':deckId' => $deckId
+            ]
+        );
 
         $deck['deckActive'] = $newActiveState;
         return $deck;
@@ -174,15 +193,15 @@ class DeckManager
 
     public function setAllActive(bool $active): void
     {
-        $stmt = $this->pdo->prepare("UPDATE Decks SET deckActive = :deckActive");
-        $stmt->execute([
-            ':deckActive' => $active,
-        ]);
+        $stmt = $this->pdo->prepare('UPDATE Decks SET deckActive = :deckActive');
+        $stmt->execute(
+            [':deckActive' => $active]
+        );
     }
 
     public function updateNote(int $deckId, string $deckNote): void
     {
-        $stmt = $this->pdo->prepare("UPDATE Decks SET deckNote = ? WHERE deckId = ?");
+        $stmt = $this->pdo->prepare('UPDATE Decks SET deckNote = ? WHERE deckId = ?');
         $stmt->execute([$deckNote, $deckId]);
     }
 
@@ -195,24 +214,39 @@ class DeckManager
         $optionalHeaderFields = ['Card Note'];
 
         while (($data = fgetcsv($file)) !== false) {
-            if (count($data) == 1 && $data == [0 => null]) {
+            if (count($data) === 1 && $data === [0 => null]) {
                 continue;
             }
             if ($headerFields) {
-                if ($data != $headerFields && $data != array_merge($headerFields, $optionalHeaderFields)) {
-                    throw new Exception('CSV file is missing header fields: ' . var_export($headerFields, true));
+                if (
+                    $data !== $headerFields && $data !== array_merge(
+                        $headerFields,
+                        $optionalHeaderFields
+                    )
+                ) {
+                    throw new Exception(
+                        'CSV file is missing header fields: ' . var_export(
+                            $headerFields,
+                            true
+                        )
+                    );
                 }
                 $headerFields = null;
                 continue;
             }
 
             if (count($data) < 2 || count($data) > 3) {
-                throw new Exception('CSV file has the wrong number of fields:' . var_export($data, true));
+                throw new Exception(
+                    'CSV file has the wrong number of fields:' . var_export(
+                        $data,
+                        true
+                    )
+                );
             }
             $cardAnswer = trim($data[0]);
             $cardQuestion = trim($data[1]);
             $cardNote = isset($data[2]) && strlen(trim($data[2])) > 0 ? trim($data[2]) : null;
-            if (strlen($cardAnswer) == 0 || strlen($cardQuestion) == 0) {
+            if (strlen($cardAnswer) === 0 || strlen($cardQuestion) === 0) {
                 throw new Exception('CSV file has an empty field');
             }
             if (strlen($cardAnswer) > 255 || strlen($cardQuestion) > 255) {

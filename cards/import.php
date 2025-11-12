@@ -34,9 +34,14 @@ try {
             foreach ($cardAnswers as $cardAnswer => $cardNote) {
                 // Check for duplicates and apply overrides
                 if ($cardManager->checkForDuplicateAnswer($deckId, $cardAnswer, $cardQuestion)) {
-                    if ($answerOverride === "overwrite") {
-                        $cardManager->overwriteCardAnswer($deckId, $cardAnswer, $cardQuestion, $cardNote);
-                    } else if ($answerOverride === "append") {
+                    if ($answerOverride === 'overwrite') {
+                        $cardManager->overwriteCardAnswer(
+                            $deckId,
+                            $cardAnswer,
+                            $cardQuestion,
+                            $cardNote
+                        );
+                    } elseif ($answerOverride === 'append') {
                         $cardManager->create($deckId, $cardAnswer, $cardQuestion, $cardNote);
                     }
                 } else {
@@ -53,6 +58,11 @@ try {
         throw new Exception('Deck file or ID not found');
     }
 } catch (Exception $e) {
-    http_response_code(400); // return a custom status code
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    http_response_code(400);
+    echo json_encode(
+        [
+            'status' => 'error',
+            'message' => $e->getMessage(),
+        ]
+    );
 }
