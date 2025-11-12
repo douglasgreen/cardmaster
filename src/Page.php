@@ -54,6 +54,8 @@ class Page {
         }
         $current_page = $match['page'];
 
+        $baseUrl = $this->app->getBaseUrl();
+
         $links = [
             ['name' => 'help', 'href' => 'help/', 'id' => 'get-help-link', 'text' => 'Get Help'],
             ['name' => 'deck', 'href' => 'deck/', 'id' => 'manage-decks-link', 'text' => 'Manage Decks'],
@@ -66,7 +68,7 @@ class Page {
         foreach ($links as $link) {
             $class = ($current_page == $link['name']) ? 'class="active"' : '';
             echo <<<HTML
-                <li><a href="{$link['href']}" id="{$link['id']}" {$class}>{$link['text']}</a></li>
+                <li><a href="{$baseUrl}{$link['href']}" id="{$link['id']}" {$class}>{$link['text']}</a></li>
                 HTML;
         }
 		echo "</ul>\n";

@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use CardMaster\Application;
 use CardMaster\DeckManager;
@@ -12,10 +12,9 @@ try {
     $pdo = $app->getPdo();
 
     $deckManager = new DeckManager($pdo);
-    $active = isset($_POST['active']) ? filter_var($_POST['active'], FILTER_VALIDATE_BOOLEAN) : false;
-    $updatedDeck = $deckManager->setAllActive($active);
+    $allDecks = $deckManager->readAll();
 
-    echo json_encode($updatedDeck);
+    echo json_encode($allDecks);
 } catch (Exception $e) {
     http_response_code(400); // return a custom status code
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);

@@ -1,9 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use CardMaster\Application;
-use CardMaster\CardManager;
+use CardMaster\DeckManager;
 
 header('Content-Type: application/json');
 
@@ -11,8 +11,8 @@ try {
     $app = new Application();
     $pdo = $app->getPdo();
 
-    $cardManager = new CardManager($pdo);
-    $cardManager->updateText($_POST['cardId'], $_POST['cardAnswer'], $_POST['cardQuestion'], $_POST['cardNote']);
+    $deckManager = new DeckManager($pdo);
+    $deckManager->resetCards($_POST['deckId']);
     echo json_encode(['status' => 'ok']);
 } catch (Exception $e) {
     http_response_code(400); // return a custom status code

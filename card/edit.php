@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use CardMaster\Application;
 use CardMaster\CardManager;
@@ -12,7 +12,7 @@ try {
     $pdo = $app->getPdo();
 
     $cardManager = new CardManager($pdo);
-    $cardManager->delete($_POST['cardId']);
+    $cardManager->updateText($_POST['cardId'], $_POST['cardAnswer'], $_POST['cardQuestion'], $_POST['cardNote']);
     echo json_encode(['status' => 'ok']);
 } catch (Exception $e) {
     http_response_code(400); // return a custom status code

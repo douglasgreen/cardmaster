@@ -35,7 +35,7 @@ class Application
         $serverName = $_SERVER['SERVER_NAME'];
         $requestUri = $_SERVER['REQUEST_URI'];
 
-        $baseURL = '';
+        $baseUrl = '';
 
         // Find the position of the program name in the URL.
         $progDir = basename($this->basePath);
@@ -43,8 +43,8 @@ class Application
 
         // If program name is found, get the base path.
         if ($prognamePosition !== false) {
-            $baseURL = substr($requestUri, 0, $prognamePosition) . $progDir . '/public/';
-            return 'https://' . $serverName . $baseURL;
+            $baseUrl = substr($requestUri, 0, $prognamePosition) . $progDir . '/';
+            return 'https://' . $serverName . $baseUrl;
         } else {
             throw new Exception("Base URL not found");
         }
