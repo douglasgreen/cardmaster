@@ -7,8 +7,6 @@ use CardMaster\DatabaseManager;
 use CardMaster\DeckManager;
 use CardMaster\Input;
 
-die("Doesn't work without user_id\n");
-
 readline_callback_handler_install('', function () {
 });
 

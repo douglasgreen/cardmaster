@@ -6,7 +6,6 @@ use CardMaster\Application;
 use CardMaster\Page;
 
 $app = new Application();
-$app->checkAuthenticationAndRedirect();
 $page = new Page($app);
 $page->addCss("common.css");
 $page->addCss("header.css");

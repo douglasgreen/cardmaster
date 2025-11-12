@@ -9,7 +9,6 @@ header('Content-Type: application/json');
 
 try {
     $app = new Application();
-    $app->checkAuthentication();
     $pdo = $app->getPdo();
 
     $languageManager = new LanguageManager($pdo);

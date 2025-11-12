@@ -9,13 +9,11 @@ header('Content-Type: application/json');
 
 try {
     $app = new Application();
-    $app->checkAuthentication();
     $pdo = $app->getPdo();
-    $userId = $app->getUserId();
 
     $deckManager = new DeckManager($pdo);
     $active = isset($_POST['active']) ? filter_var($_POST['active'], FILTER_VALIDATE_BOOLEAN) : false;
-    $updatedDeck = $deckManager->setAllActive($userId, $active);
+    $updatedDeck = $deckManager->setAllActive($active);
 
     echo json_encode($updatedDeck);
 } catch (Exception $e) {

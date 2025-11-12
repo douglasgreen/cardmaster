@@ -1,8 +1,8 @@
 {
     "name": "DouglasGreen/cardmaster",
     "version": "1.0.0",
-    "description": "Multi-user flashcard review program",
-    "license": "GPL-3.0-or-later",
+    "description": "Single-user flashcard review program",
+    "license": "MIT",
     "devDependencies": {
         "eslint": "^8.41.0",
         "prettier": "^2.8.8"

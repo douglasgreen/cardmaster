@@ -9,12 +9,10 @@ header('Content-Type: application/json');
 
 try {
     $app = new Application();
-    $app->checkAuthentication();
     $pdo = $app->getPdo();
-    $userId = $app->getUserId();
 
     $deckManager = new DeckManager($pdo);
-    $allDecks = $deckManager->readAll($userId);
+    $allDecks = $deckManager->readAll();
 
     echo json_encode($allDecks);
 } catch (Exception $e) {

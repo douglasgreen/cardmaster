@@ -11,9 +11,7 @@ header('Content-Type: application/json');
 
 try {
     $app = new Application();
-    $app->checkAuthentication();
     $pdo = $app->getPdo();
-    $userId = $app->getUserId();
 
     // Create new instances of flashcard classes.
     $cardManager = new CardManager($pdo);
@@ -24,7 +22,7 @@ try {
     $score = $_POST['score'] ?? 0;
     $timeTaken = $_POST['timeTaken'] ?? 10;
     if ($cardId !== null) {
-        $cardManager->updateAttempts($userId, $cardId, $lastAttempt, $correctAttempts, $score, $timeTaken);
+        $cardManager->updateAttempts($cardId, $lastAttempt, $correctAttempts, $score, $timeTaken);
         echo json_encode(['status' => 'success']);
     } else {
         throw new Exception('Missing parameters');

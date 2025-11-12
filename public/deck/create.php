@@ -10,9 +10,7 @@ header('Content-Type: application/json');
 
 try {
     $app = new Application();
-    $app->checkAuthentication();
     $pdo = $app->getPdo();
-    $userId = $app->getUserId();
 
     $response = [];
 
@@ -32,13 +30,13 @@ try {
 
         $cardQuestionLangId = $_POST['cardQuestionLangId'] ? (int) $_POST['cardQuestionLangId'] : null;
         $cardAnswerLangId = $_POST['cardAnswerLangId'] ? (int) $_POST['cardAnswerLangId'] : null;
-        $deckId = $deckManager->create($userId, $_POST['deckName'], $deckNote, $cardQuestionLangId, $cardAnswerLangId);
+        $deckId = $deckManager->create($_POST['deckName'], $deckNote, $cardQuestionLangId, $cardAnswerLangId);
 
         $cardManager = new CardManager($pdo);
 
         foreach ($cards as $cardQuestion => $cardAnswers) {
             foreach ($cardAnswers as $cardAnswer => $cardNote) {
-                $cardManager->create($userId, $deckId, $cardAnswer, $cardQuestion, $cardNote);
+                $cardManager->create($deckId, $cardAnswer, $cardQuestion, $cardNote);
             }
         }
 

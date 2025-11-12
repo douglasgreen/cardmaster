@@ -18,7 +18,6 @@ class DeckManager
     }
 
     public function create(
-        int $userId,
         string $deckName,
         string $deckNote = null,
         int $cardQuestionLangId = null,
@@ -27,7 +26,6 @@ class DeckManager
         $query = <<<SQL
             INSERT INTO
                 Decks (
-                    userId,
                     deckName,
                     deckNote,
                     cardQuestionLangId,
@@ -35,11 +33,10 @@ class DeckManager
                     deckActive
                 )
             VALUES
-                (:userId, :deckName, :deckNote, :question, :answer, 1)
+                (:deckName, :deckNote, :question, :answer, 1)
             SQL;
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([
-            ':userId' => $userId,
             ':deckName' => $deckName,
             ':deckNote' => $deckNote ?: null,
             ':question' => $cardQuestionLangId ?: null,
@@ -50,38 +47,13 @@ class DeckManager
         return $deckId;
     }
 
-    public function delete(int $userId, int $deckId): void
+    public function delete(int $deckId): void
     {
-        $this->mustBeOwnedByUser($userId, $deckId);
-        $stmt = $this->pdo->prepare("DELETE FROM Decks WHERE userId = ? AND deckId = ?");
-        $stmt->execute([$userId, $deckId]);
+        $stmt = $this->pdo->prepare("DELETE FROM Decks WHERE deckId = ?");
+        $stmt->execute([$deckId]);
     }
 
-    public function mustBeOwnedByUser(int $userId, int $deckId): void
-    {
-        $query = <<<SQL
-            SELECT
-                COUNT(*) as count
-            FROM
-                Decks
-            WHERE
-                userId = :userId
-                AND deckId = :deckId
-            SQL;
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([
-            ':userId' => $userId,
-            ':deckId' => $deckId
-        ]);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($result['count'] == 0) {
-            throw new Exception("Deck is not owned by user");
-        }
-    }
-
-    public function readAll(int $userId): array
+    public function readAll(): array
     {
         // Mastery assumes that cards has score 10 or more
         $query = <<<SQL
@@ -94,15 +66,13 @@ class DeckManager
             FROM
                 Decks
                 LEFT JOIN Cards USING (deckId)
-            WHERE
-                Decks.userId = :userId
             GROUP BY
                 deckId
             ORDER BY
                 deckName
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':userId' => $userId]);
+        $stmt->execute();
         $rows = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $row['percentCorrect'] = $row['sumAllAttempts'] ? round($row['sumCorrectAttempts'] / $row['sumAllAttempts'] * 100) : 0;
@@ -112,25 +82,23 @@ class DeckManager
         return $rows;
     }
 
-    public function read(int $userId, int $deckId): array
+    public function read(int $deckId): array
     {
-        $this->mustBeOwnedByUser($userId, $deckId);
-        $stmt = $this->pdo->prepare("SELECT * FROM Decks WHERE userId = ? AND deckId = ?");
-        $stmt->execute([$userId, $deckId]);
+        $stmt = $this->pdo->prepare("SELECT * FROM Decks WHERE deckId = ?");
+        $stmt->execute([$deckId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function readByName(int $userId, string $deckName): array
+    public function readByName(string $deckName): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM Decks WHERE userId = ? AND deckName = ?");
-        $stmt->execute([$userId, $deckName]);
+        $stmt = $this->pdo->prepare("SELECT * FROM Decks WHERE deckName = ?");
+        $stmt->execute([$deckName]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $deckId = $row['deckId'];
-        $this->mustBeOwnedByUser($userId, $deckId);
         return $row;
     }
 
-    public function readNames(int $userId): array
+    public function readNames(): array
     {
         $query = <<<SQL
             SELECT
@@ -138,37 +106,32 @@ class DeckManager
                 deckName
             FROM
                 Decks
-            WHERE
-                userId = :userId
             ORDER BY
                 deckName
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':userId' => $userId]);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function rename(int $userId, int $deckId, string $newName): array
+    public function rename(int $deckId, string $newName): array
     {
-        $this->mustBeOwnedByUser($userId, $deckId);
         $query = <<<SQL
             UPDATE
                 Decks
             SET
                 deckName = :deckName
             WHERE
-                userId = :userId
-                AND deckId = :deckId
+                deckId = :deckId
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':userId' => $userId, ':deckName' => $newName, ':deckId' => $deckId]);
+        $stmt->execute([':deckName' => $newName, ':deckId' => $deckId]);
 
         return ['deckId' => $deckId, 'deckName' => $newName];
     }
 
-    public function resetCards(int $userId, int $deckId): void
+    public function resetCards(int $deckId): void
     {
-        $this->mustBeOwnedByUser($userId, $deckId);
         $query = <<<SQL
             UPDATE
                 Cards
@@ -178,21 +141,18 @@ class DeckManager
                 correctAttempts = 0,
                 allAttempts = 0
             WHERE
-                userId = :userId
-                AND deckId = :deckId
+                deckId = :deckId
             SQL;
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([
-            ':userId' => $userId,
             ':deckId' => $deckId
         ]);
     }
 
-    public function toggleActive(int $userId, int $deckId): array
+    public function toggleActive(int $deckId): array
     {
-        $this->mustBeOwnedByUser($userId, $deckId);
-        $stmt = $this->pdo->prepare("SELECT deckActive FROM Decks WHERE userId = :userId AND deckId = :deckId");
-        $stmt->execute([':userId' => $userId, ':deckId' => $deckId]);
+        $stmt = $this->pdo->prepare("SELECT deckActive FROM Decks WHERE deckId = :deckId");
+        $stmt->execute([':deckId' => $deckId]);
         $deck = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $newActiveState = $deck['deckActive'] ? "0" : "1";
@@ -203,30 +163,27 @@ class DeckManager
             SET
                 deckActive = :deckActive
             WHERE
-                userId = :userId
-                AND deckId = :deckId
+                deckId = :deckId
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':userId' => $userId, ':deckActive' => $newActiveState, ':deckId' => $deckId]);
+        $stmt->execute([':deckActive' => $newActiveState, ':deckId' => $deckId]);
 
         $deck['deckActive'] = $newActiveState;
         return $deck;
     }
 
-    public function setAllActive(int $userId, bool $active): void
+    public function setAllActive(bool $active): void
     {
-        $stmt = $this->pdo->prepare("UPDATE Decks SET deckActive = :deckActive WHERE userId = :userId");
+        $stmt = $this->pdo->prepare("UPDATE Decks SET deckActive = :deckActive");
         $stmt->execute([
             ':deckActive' => $active,
-            ':userId' => $userId
         ]);
     }
 
-    public function updateNote(int $userId, int $deckId, string $deckNote): void
+    public function updateNote(int $deckId, string $deckNote): void
     {
-        $this->mustBeOwnedByUser($userId, $deckId);
-        $stmt = $this->pdo->prepare("UPDATE Decks SET deckNote = ? WHERE userId = ? AND deckId = ?");
-        $stmt->execute([$deckNote, $userId, $deckId]);
+        $stmt = $this->pdo->prepare("UPDATE Decks SET deckNote = ? WHERE deckId = ?");
+        $stmt->execute([$deckNote, $deckId]);
     }
 
     public function uploadCards(string $filePath): array

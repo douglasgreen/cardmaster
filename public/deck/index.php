@@ -7,12 +7,10 @@ use CardMaster\DeckManager;
 use CardMaster\Page;
 
 $app = new Application();
-$app->checkAuthenticationAndRedirect();
 $pdo = $app->getPdo();
-$userId = $app->getUserId();
 
 $deckManager = new DeckManager($pdo);
-$deckNames = $deckManager->readNames($userId);
+$deckNames = $deckManager->readNames();
 
 $page = new Page($app);
 $page->addCss("common.css");

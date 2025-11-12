@@ -9,12 +9,10 @@ header('Content-Type: application/json');
 
 try {
     $app = new Application();
-    $app->checkAuthentication();
     $pdo = $app->getPdo();
-    $userId = $app->getUserId();
 
     $deckManager = new DeckManager($pdo);
-    $updatedDeck = $deckManager->rename($userId, $_POST['deckId'], $_POST['newName']);
+    $updatedDeck = $deckManager->rename($_POST['deckId'], $_POST['newName']);
 
     echo json_encode($updatedDeck);
 } catch (Exception $e) {

@@ -11,8 +11,6 @@ class Application
     private $baseUrl;
     private $config;
     private $pdo;
-    private $userId;
-    private $userManager;
 
     public function __construct()
     {
@@ -27,30 +25,6 @@ class Application
         $dbConfig = $this->getConfigSection('db');
         $dbManager = new DatabaseManager($dbConfig);
         $this->pdo = $dbManager->getConnection();
-
-        $userConfig = $this->getConfigSection('user');
-        $this->userManager = new UserManager($this->pdo, $userConfig);
-    }
-
-    public function checkAuthentication()
-    {
-        if (isset($_SESSION['userId'])) {
-            $this->userId = $_SESSION['userId'];
-        } else {
-            header('HTTP/1.1 401 Unauthorized');
-            exit();
-        }
-    }
-
-    public function checkAuthenticationAndRedirect()
-    {
-        if (isset($_SESSION['userId'])) {
-            $this->userId = $_SESSION['userId'];
-        } else {
-            header('HTTP/1.1 401 Unauthorized');
-            $this->redirect('index.php');
-            exit();
-        }
     }
 
     public function getAbsoluteUrl($relativePath) {
@@ -82,16 +56,6 @@ class Application
             throw new Exception("Section not found");
         }
         return $this->config[$section];
-    }
-
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
-
-    public function getUserManager(): UserManager
-    {
-        return $this->userManager;
     }
 
     public function getPdo(): PDO

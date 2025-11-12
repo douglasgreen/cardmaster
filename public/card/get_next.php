@@ -11,20 +11,18 @@ header('Content-Type: application/json');
 
 try {
     $app = new Application();
-    $app->checkAuthentication();
     $pdo = $app->getPdo();
-    $userId = $app->getUserId();
 
 // Create new instances of flashcard classes.
     $deckManager = new DeckManager($pdo);
     $cardManager = new CardManager($pdo);
     $languageManager = new LanguageManager($pdo);
 
-    $nextCard = $cardManager->getNext($userId);
+    $nextCard = $cardManager->getNext();
     if ($nextCard === null) {
         echo json_encode(['card' => null]);
     } else {
-        $deck = $deckManager->read($userId, $nextCard['deckId']);
+        $deck = $deckManager->read($nextCard['deckId']);
         $questionLanguage = $deck['cardQuestionLangId'] ? $languageManager->read($deck['cardQuestionLangId']) : null;
         $answerLanguage = $deck['cardAnswerLangId'] ? $languageManager->read($deck['cardAnswerLangId']) : null;
         $data = ['card' => $nextCard, 'deck' => $deck, 'questionLanguage' => $questionLanguage, 'answerLanguage' => $answerLanguage];

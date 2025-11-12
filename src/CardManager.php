@@ -23,9 +23,9 @@ class CardManager
         $this->deckManager = new DeckManager($pdo);
     }
 
-    public function create(int $userId, int $deckId, string $cardAnswer, string $cardQuestion, ?string $cardNote = null): string
+    public function create(int $deckId, string $cardAnswer, string $cardQuestion, ?string $cardNote = null): string
     {
-        $this->deckManager->mustBeOwnedByUser($userId, $deckId);
+        $this->deckManager->mustBeOwnedByUser($deckId);
         $query = <<<SQL
             INSERT INTO
                 Cards
@@ -47,14 +47,13 @@ class CardManager
         return $cardId;
     }
 
-    public function delete(int $userId, int $cardId): void
+    public function delete(int $cardId): void
     {
-        $this->mustBeOwnedByUser($userId, $cardId);
         $stmt = $this->pdo->prepare("DELETE FROM Cards WHERE cardId = ?");
         $stmt->execute([$cardId]);
     }
 
-    public function getNext(int $userId): ?array
+    public function getNext(): ?array
     {
         // Select the next card in need of review at random.
         // Limit correct attempts between 3^0*5=5 minutes and 3^10*5 minutes = 205 days between repetitions.
@@ -69,8 +68,7 @@ class CardManager
                 Cards
                 JOIN Decks USING (deckId)
             WHERE
-                userId = :userId
-                AND deckActive = TRUE
+                deckActive = TRUE
                 AND lastAttempt IS NOT NULL
             HAVING
                 review_date < NOW()
@@ -78,7 +76,7 @@ class CardManager
                 RAND()
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':userId' => $userId]);
+        $stmt->execute();
         $reviewCount = $stmt->rowCount();
         if ($reviewCount) {
             $firstCard = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -94,14 +92,13 @@ class CardManager
                 Cards
                 JOIN Decks USING (deckId)
             WHERE
-                userId = :userId
-                AND deckActive = TRUE
+                deckActive = TRUE
                 AND lastAttempt IS NULL
             ORDER BY
                 RAND()
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':userId' => $userId]);
+        $stmt->execute();
         $newCount = $stmt->rowCount();
         if ($newCount) {
             $firstCard = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -122,8 +119,7 @@ class CardManager
                 Cards
                 JOIN Decks USING (deckId)
             WHERE
-                userId = :userId
-                AND deckActive = TRUE
+                deckActive = TRUE
                 AND lastAttempt IS NOT NULL
             HAVING
                 review_date >= NOW()
@@ -131,7 +127,7 @@ class CardManager
                 RAND()
             SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':userId' => $userId]);
+        $stmt->execute();
         $oldCount = $stmt->rowCount();
         if ($oldCount) {
             $firstCard = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -141,50 +137,22 @@ class CardManager
 
         return null;
     }
-
-    public function mustBeOwnedByUser(int $userId, int $cardId): void
+    public function read(int $cardId): array
     {
-        $query = <<<SQL
-            SELECT
-                COUNT(*) as count
-            FROM
-                Cards
-                JOIN Decks USING (deckId)
-            WHERE
-                Decks.userId = :userId
-                AND Cards.cardId = :cardId
-            SQL;
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([
-            ':userId' => $userId,
-            ':cardId' => $cardId
-        ]);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($result['count'] == 0) {
-            throw new Exception("Card is not owned by user");
-        }
-    }
-
-    public function read(int $userId, int $cardId): array
-    {
-        $this->mustBeOwnedByUser($userId, $cardId);
         $stmt = $this->pdo->prepare("SELECT * FROM Cards WHERE cardId = ?");
         $stmt->execute([$cardId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function readAll(int $userId): array
+    public function readAll(): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM Cards WHERE userId = ?");
-        $stmt->execute([$userId]);
+        $stmt = $this->pdo->prepare("SELECT * FROM Cards");
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function readDeck(int $userId, int $deckId): array
+    public function readDeck(int $deckId): array
     {
-        $this->deckManager->mustBeOwnedByUser($userId, $deckId);
         $query = <<<SQL
             SELECT
                 Cards.*
@@ -192,20 +160,17 @@ class CardManager
                 Cards
                 JOIN Decks USING (deckId)
             WHERE
-                userId = :userId
-                AND deckId = :deckId
+                deckId = :deckId
             SQL;
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([
-            ':userId' => $userId,
             ':deckId' => $deckId
         ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function updateAttempts(int $userId, int $cardId, string $lastAttempt, int $correctAttempts, float $score, float $timeTaken): void
+    public function updateAttempts(int $cardId, string $lastAttempt, int $correctAttempts, float $score, float $timeTaken): void
     {
-        $this->mustBeOwnedByUser($userId, $cardId);
         $query = <<<SQL
             UPDATE
                 Cards
@@ -229,9 +194,8 @@ class CardManager
         ]);
     }
 
-    public function updateText(int $userId, int $cardId, string $cardAnswer, string $cardQuestion, ?string $cardNote): void
+    public function updateText(int $cardId, string $cardAnswer, string $cardQuestion, ?string $cardNote): void
     {
-        $this->mustBeOwnedByUser($userId, $cardId);
         $query = <<<SQL
             UPDATE
                 Cards
@@ -251,10 +215,8 @@ class CardManager
         $stmt->execute([$cardAnswer, $cardQuestion, $cardNote, $cardId]);
     }
 
-    public function checkForDuplicateAnswer(int $userId, int $deckId, string $cardAnswer, string $cardQuestion): bool
+    public function checkForDuplicateAnswer(int $deckId, string $cardAnswer, string $cardQuestion): bool
     {
-        $this->deckManager->mustBeOwnedByUser($userId, $deckId);
-
         $dupAnswerQuery = "SELECT COUNT(*) AS count FROM Cards WHERE deckId = :deckId AND cardAnswer = :cardAnswer";
         $stmt = $this->pdo->prepare($dupAnswerQuery);
         $stmt->execute([
@@ -266,10 +228,8 @@ class CardManager
         return $dupAnswer;
     }
 
-    public function overwriteCardAnswer(int $userId, int $deckId, string $cardAnswer, string $cardQuestion, ?string $cardNote): void
+    public function overwriteCardAnswer(int $deckId, string $cardAnswer, string $cardQuestion, ?string $cardNote): void
     {
-        $this->deckManager->mustBeOwnedByUser($userId, $deckId);
-
         $overwriteQuery = "UPDATE Cards SET cardAnswer = :cardAnswer, cardQuestion = :cardQuestion, cardNote = :cardNote WHERE deckId = :deckId AND cardAnswer = :cardAnswer";
         $stmt = $this->pdo->prepare($overwriteQuery);
         $stmt->execute([
@@ -280,10 +240,8 @@ class CardManager
         ]);
     }
 
-    public function overwriteCardQuestion(int $userId, int $deckId, string $cardAnswer, string $cardQuestion, ?string $cardNote): void
+    public function overwriteCardQuestion(int $deckId, string $cardAnswer, string $cardQuestion, ?string $cardNote): void
     {
-        $this->deckManager->mustBeOwnedByUser($userId, $deckId);
-
         $overwriteQuery = "UPDATE Cards SET cardAnswer = :cardAnswer, cardQuestion = :cardQuestion, cardNote = :cardNote WHERE deckId = :deckId AND cardQuestion = :cardQuestion";
         $stmt = $this->pdo->prepare($overwriteQuery);
         $stmt->execute([

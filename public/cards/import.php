@@ -10,9 +10,7 @@ header('Content-Type: application/json');
 
 try {
     $app = new Application();
-    $app->checkAuthentication();
     $pdo = $app->getPdo();
-    $userId = $app->getUserId();
 
     $response = ['post' => $_POST];
 
@@ -35,14 +33,14 @@ try {
         foreach ($cards as $cardQuestion => $cardAnswers) {
             foreach ($cardAnswers as $cardAnswer => $cardNote) {
                 // Check for duplicates and apply overrides
-                if ($cardManager->checkForDuplicateAnswer($userId, $deckId, $cardAnswer, $cardQuestion)) {
+                if ($cardManager->checkForDuplicateAnswer($deckId, $cardAnswer, $cardQuestion)) {
                     if ($answerOverride === "overwrite") {
-                        $cardManager->overwriteCardAnswer($userId, $deckId, $cardAnswer, $cardQuestion, $cardNote);
+                        $cardManager->overwriteCardAnswer($deckId, $cardAnswer, $cardQuestion, $cardNote);
                     } else if ($answerOverride === "append") {
-                        $cardManager->create($userId, $deckId, $cardAnswer, $cardQuestion, $cardNote);
+                        $cardManager->create($deckId, $cardAnswer, $cardQuestion, $cardNote);
                     }
                 } else {
-                    $cardManager->create($userId, $deckId, $cardAnswer, $cardQuestion, $cardNote);
+                    $cardManager->create($deckId, $cardAnswer, $cardQuestion, $cardNote);
                 }
             }
         }

@@ -6,8 +6,6 @@ use CardMaster\CardManager;
 use CardMaster\DatabaseManager;
 use CardMaster\DeckManager;
 
-die("Doesn't work without user_id\n");
-
 if ($argc != 2 || !is_dir($argv[1])) {
     die("Usage: " . basename($argv[0]) . " DIRNAME\n");
 }

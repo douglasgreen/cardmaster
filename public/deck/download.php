@@ -8,15 +8,13 @@ use CardMaster\DeckManager;
 
 try {
     $app = new Application();
-    $app->checkAuthentication();
     $pdo = $app->getPdo();
-    $userId = $app->getUserId();
 
     if (!empty($_POST['deckId'])) {
         $deckId = $_POST['deckId'];
 
         $cardManager = new CardManager($pdo);
-        $cards = $cardManager->readDeck($userId, $deckId);
+        $cards = $cardManager->readDeck($deckId);
 
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=deck.csv');

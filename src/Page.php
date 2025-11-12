@@ -55,9 +55,9 @@ class Page {
         $current_page = $match['page'];
 
         $links = [
-            ['name' => 'help', 'href' => '../help/', 'id' => 'get-help-link', 'text' => 'Get Help'],
-            ['name' => 'deck', 'href' => '../deck/', 'id' => 'manage-decks-link', 'text' => 'Manage Decks'],
-            ['name' => 'card', 'href' => '../card/', 'id' => 'study-cards-link', 'text' => 'Study Cards']
+            ['name' => 'help', 'href' => 'help/', 'id' => 'get-help-link', 'text' => 'Get Help'],
+            ['name' => 'deck', 'href' => 'deck/', 'id' => 'manage-decks-link', 'text' => 'Manage Decks'],
+            ['name' => 'card', 'href' => 'card/', 'id' => 'study-cards-link', 'text' => 'Study Cards']
         ];
 
         echo "<header>\n";
