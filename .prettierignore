@@ -1,0 +1,17 @@
+bower/
+composer.lock
+*.dist
+*.example
+*.gif
+.gitignore
+*.ico
+*.jpeg
+*.jpg
+*.min.*
+node_modules/
+*.php
+*.png
+.prettierignore
+*.txt
+var/
+vendor/

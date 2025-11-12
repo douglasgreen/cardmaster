@@ -1,0 +1,21 @@
+Frameworks:
+
+* Slim vs. Symfony?
+* W3.CSS vs. Bulma vs. Tailwind vs. CSS?
+* ORM? Medoo?
+
+Todo: Don't allow dupe questions in deck
+
+Todo: Look up related longest terms in Wikipedia.
+
+Write a set of flashcards to study Italian grammar, including noun endings, verb endings, articles, gender, case, number, and any other basic helpful rules. The front of the flashcard should consist of a short description and the back should consist of a word, word ending, or phrase.
+
+## Card notes
+
+* Add acronyms
+* Enforce singular/plural and noun/verb agreement
+* Delete non-essential parts of definition
+* Ensure uniqueness
+* Remove close synonyms
+* Use shorter definitions
+* Delete statement of purpose or consequence if not part of definition

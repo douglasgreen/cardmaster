@@ -1,0 +1,283 @@
+#addDeckBtn,
+#exportCardBtn,
+#importCardBtn,
+#markAllInUseBtn,
+#markAllNotActiveBtn {
+	background-color: #007bff;
+	border: none;
+	border-radius: 5px;
+	color: #fff;
+	cursor: pointer;
+	margin-bottom: 30px;
+	padding: 10px 20px;
+	transition: background-color .3s ease;
+}
+
+#addDeckBtn:hover,
+#exportCardBtn:hover,
+#importCardBtn:hover,
+#markAllInUseBtn:hover,
+#markAllNotActiveBtn:hover {
+	background-color: #0056b3;
+}
+
+#addDeckForm {
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+	margin-bottom: 20px;
+	max-width: 400px;
+	padding: 30px;
+	text-align: center;
+}
+
+#deckContainer {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	justify-content: start;
+}
+
+#deckContainer div {
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+	box-sizing: border-box;
+	padding: 20px;
+	width: calc(50% - 20px);
+}
+
+#deckFile {
+	background-color: #007bff;
+	border: none;
+	border-radius: 5px;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	margin-top: 20px;
+	padding: 10px 20px;
+	transition: background-color .3s ease;
+}
+
+#deckFile::-webkit-file-upload-button {
+	visibility: hidden;
+}
+
+#deckFile::before {
+	-webkit-user-select: none;
+	background: #007bff;
+	border: none;
+	border-radius: 5px;
+	color: #fff;
+	content: "Select file";
+	cursor: pointer;
+	display: inline-block;
+	font-size: 10pt;
+	outline: none;
+	padding: 5px;
+	transition: background-color .3s ease;
+	white-space: nowrap;
+}
+
+#deckFile:hover::before {
+	background-color: #0056b3;
+}
+
+#exportCardForm {
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+	margin-bottom: 20px;
+	max-width: 400px;
+	padding: 30px;
+	text-align: center;
+}
+
+#exportCardForm input[type="submit"] {
+	background-color: #007bff;
+	border: none;
+	border-radius: 5px;
+	color: #fff;
+	cursor: pointer;
+	padding: 10px 20px;
+	transition: background-color .3s ease;
+}
+
+#exportCardForm input[type="submit"]:hover {
+	background-color: #0056b3;
+}
+
+#exportCardForm select {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	margin-bottom: 20px;
+	margin-top: 10px;
+	padding: 10px;
+	width: 100%;
+}
+
+#importCardForm {
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+	margin-bottom: 20px;
+	max-width: 400px;
+	padding: 30px;
+	text-align: center;
+}
+
+#newCardForm .radio-group {
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 20px;
+}
+
+#newCardForm .radio-group input[type="radio"] {
+	margin-top: 0;
+}
+
+#newCardForm .radio-group label {
+	font-size: 16px;
+	font-weight: 700;
+	margin-left: 10px;
+}
+
+#newCardForm input[type="file"] {
+	background-color: #007bff;
+	border: none;
+	border-radius: 5px;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	margin-top: 20px;
+	padding: 10px 20px;
+	transition: background-color .3s ease;
+}
+
+#newCardForm input[type="file"]::-webkit-file-upload-button {
+	visibility: hidden;
+}
+
+#newCardForm input[type="file"]::before {
+	-webkit-user-select: none;
+	background: #007bff;
+	border: none;
+	border-radius: 5px;
+	color: #fff;
+	content: "Select file";
+	cursor: pointer;
+	display: inline-block;
+	font-size: 10pt;
+	outline: none;
+	padding: 5px;
+	transition: background-color .3s ease;
+	white-space: nowrap;
+}
+
+#newCardForm input[type="file"]:hover::before {
+	background-color: #0056b3;
+}
+
+#newCardForm input[type="submit"] {
+	background-color: #007bff;
+	border: none;
+	border-radius: 5px;
+	color: #fff;
+	cursor: pointer;
+	padding: 10px 20px;
+	transition: background-color .3s ease;
+}
+
+#newCardForm input[type="submit"]:hover {
+	background-color: #0056b3;
+}
+
+#newCardForm select {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	margin-bottom: 20px;
+	margin-top: 10px;
+	padding: 10px;
+	width: 100%;
+}
+
+#newDeckForm input[type="submit"] {
+	background-color: #007bff;
+	border: none;
+	border-radius: 5px;
+	color: #fff;
+	cursor: pointer;
+	padding: 10px 20px;
+	transition: background-color .3s ease;
+}
+
+#newDeckForm input[type="submit"]:hover {
+	background-color: #0056b3;
+}
+
+#newDeckForm input[type="text"],
+#newDeckForm select {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	margin-bottom: 20px;
+	margin-top: 10px;
+	padding: 10px;
+	width: 100%;
+}
+
+#newDeckForm label {
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.activeBtn,
+.deleteBtn {
+	background-color: #007bff;
+	border: none;
+	border-radius: 5px;
+	color: #fff;
+	cursor: pointer;
+	margin-right: 10px;
+	padding: 5px 10px;
+	transition: background-color .3s ease;
+}
+
+.activeBtn:hover,
+.deleteBtn:hover {
+	background-color: #0056b3;
+}
+
+.deck-name {
+	font-size: 20px;
+	margin-bottom: 10px;
+}
+
+.deleteBtn {
+	background-color: #dc3545;
+}
+
+.deleteBtn:hover {
+	background-color: #b21a2f;
+}
+
+.resetBtn {
+	background-color: #3af;
+	border: none;
+	border-radius: 5px;
+	color: #fff;
+	cursor: pointer;
+	margin-right: 10px;
+	padding: 5px 10px;
+	transition: background-color .3s ease;
+}
+
+.resetBtn:hover {
+	background-color: #08c;
+}
+
+h1 {
+	color: #333;
+	font-size: 36px;
+	margin-bottom: 20px;
+}

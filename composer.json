@@ -1,0 +1,29 @@
+{
+    "name": "dsg/cardmaster",
+    "description": "Flashcard Review Program",
+    "license": "GPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "CardMaster\\": "src/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/douglasgreen/pagemaker.git"
+        }
+    ],
+    "require": {
+        "php": ">=7.3.0",
+        "douglasgreen/pagemaker": "dev-main"
+    },
+    "require-dev": {
+        "phpmd/phpmd": "^2.13",
+        "squizlabs/php_codesniffer": "^3.7"
+    },
+    "scripts": {
+        "fix-js": "npm run fix && npm run format && npx prettier --write .",
+        "fix-php": "./vendor/bin/phpcbf",
+        "lint-php": "./vendor/bin/phpcs && ./vendor/bin/phpmd bin,src text phpmd.xml"
+    }
+}

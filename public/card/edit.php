@@ -1,0 +1,22 @@
+<?php
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use CardMaster\Application;
+use CardMaster\CardManager;
+
+header('Content-Type: application/json');
+
+try {
+    $app = new Application();
+    $app->checkAuthentication();
+    $pdo = $app->getPdo();
+    $userId = $app->getUserId();
+
+    $cardManager = new CardManager($pdo);
+    $cardManager->updateText($userId, $_POST['cardId'], $_POST['cardAnswer'], $_POST['cardQuestion'], $_POST['cardNote']);
+    echo json_encode(['status' => 'ok']);
+} catch (Exception $e) {
+    http_response_code(400); // return a custom status code
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+}

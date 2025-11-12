@@ -1,0 +1,4 @@
+config.ini
+media/
+node_modules/
+vendor/

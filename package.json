@@ -1,0 +1,14 @@
+{
+    "name": "DouglasGreen/cardmaster",
+    "version": "1.0.0",
+    "description": "Multi-user flashcard review program",
+    "license": "GPL-3.0-or-later",
+    "devDependencies": {
+        "eslint": "^8.41.0",
+        "prettier": "^2.8.8"
+    },
+    "scripts": {
+        "fix": "eslint --fix .",
+        "format": "prettier --write ."
+    }
+}

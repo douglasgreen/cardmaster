@@ -1,0 +1,82 @@
+#answer,
+#question {
+    font-size: 18px;
+    line-height: 1.5;
+    margin: 20px 0;
+}
+
+#cardAnswer,
+#cardNote,
+#cardQuestion {
+    margin-top: 1em;
+}
+
+#deckName {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#editForm {
+    margin-top: 2em;
+}
+
+#no:checked + label {
+    color: red;
+    font-weight: 700;
+}
+
+#page-container {
+    align-items: center;
+    display: flex;
+    height: calc(90vh - 60px);
+    justify-content: center;
+}
+
+#response {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+#response input[type="radio"] {
+    margin: 0 10px;
+}
+
+#reviewCount {
+    font-style: italic;
+}
+
+#yes:checked + label {
+    color: green;
+    font-weight: 700;
+}
+
+.flashcard {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    padding: 30px;
+    text-align: center;
+}
+
+.radio-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.radio-container input[type="radio"] {
+    margin-right: 5px;
+}
+
+.radio-container label {
+    margin-right: 10px;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+}
