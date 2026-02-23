@@ -1,14 +1,31 @@
 {
-    "name": "DouglasGreen/cardmaster",
-    "version": "1.0.0",
-    "description": "Single-user flashcard review program",
-    "license": "MIT",
-    "devDependencies": {
-        "eslint": "^9.39",
-        "prettier": "^3.6"
-    },
-    "scripts": {
-        "fix": "eslint --fix .",
-        "format": "prettier --write ."
-    }
+  "_version": "1.1.0",
+  "_modified": "2026-02-22",
+  "name": "douglasgreen/cardmaster",
+  "version": "1.0.0",
+  "description": "Single-user flashcard review program",
+  "type": "module",
+  "scripts": {
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:md",
+    "lint:js": "eslint . --ext .js,.ts,.vue,.yml,.yaml",
+    "lint:css": "stylelint \"**/*.css\"",
+    "lint:md": "markdownlint \"**/*.md\"",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0",
+    "eslint": "^9.0",
+    "eslint-config-prettier": "^10.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-security": "^4.0.0",
+    "eslint-plugin-unicorn": "^63.0.0",
+    "globals": "^17.3.0",
+    "markdownlint-cli": "^0.47.0",
+    "prettier": "^3.8.1",
+    "prettier-plugin-sh": "^0.18.0",
+    "prettier-plugin-sql": "^0.19.2",
+    "stylelint": "^17.3.0",
+    "stylelint-config-standard": "^40.0.0"
+  }
 }

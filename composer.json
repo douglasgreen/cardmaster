@@ -1,45 +1,52 @@
 {
-    "name": "dsg/cardmaster",
-    "description": "Flashcard Review Program",
-    "license": "GPL-3.0-or-later",
-    "autoload": {
-        "psr-4": {
-            "CardMaster\\": "src/"
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "config": {
-        "sort-packages": true
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/douglasgreen/pagemaker.git"
-        }
-    ],
-    "require": {
-        "php": ">=8.3.0",
-        "douglasgreen/pagemaker": "dev-main"
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.86",
-        "phpstan/phpstan": "^2.1",
-        "rector/rector": "^2.1",
-        "shipmonk/dead-code-detector": "^0.13",
-        "shipmonk/name-collision-detector": "^2.1"
-    },
-    "scripts": {
-        "fix-js": "npm run fix && npm run format && npx prettier --write .",
-        "lint": [
-            "detect-collisions",
-            "php-cs-fixer check --verbose --diff",
-            "phpstan analyse",
-            "rector --dry-run"
-        ],
-        "lint:fix": [
-            "php-cs-fixer fix --verbose --diff",
-            "rector"
-        ]
+
+  "_version": "1.1.0",
+  "_modified": "2026-02-22",
+  "name": "douglasgreen/cardmaster",
+  "description": "Flashcard review program",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "php": "^8.3"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.94.2",
+    "phpstan/phpstan": "^2.1.39",
+    "phpunit/phpunit": "^12.5.14",
+    "rector/rector": "^2.3.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
     }
+  },
+  "config": {
+    "platform": {
+      "php": "8.3"
+    },
+    "sort-packages": true
+  },
+  "scripts": {
+    "lint": [
+      "php-cs-fixer fix --dry-run --verbose",
+      "phpstan analyse",
+      "rector process --dry-run"
+    ],
+    "lint:fix": [
+      "php-cs-fixer fix",
+      "rector process"
+    ],
+    "test": [
+      "phpunit"
+    ],
+    "test:unit": [
+      "phpunit --testsuite=Unit"
+    ],
+    "test:integration": [
+      "phpunit --testsuite=Integration"
+    ],
+    "qa": [
+      "@lint"
+    ]
+  }
 }
