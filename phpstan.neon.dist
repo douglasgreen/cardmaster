@@ -4,14 +4,7 @@ parameters:
   level: 8
   paths:
     - bin
-    - card
-    - cards
-    - deck
-    - decks
-    - header.php
-    - help
-    - index.php
-    - languages
+    - public
     - src
   excludePaths:
     - var

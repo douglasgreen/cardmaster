@@ -8,14 +8,7 @@ use PhpCsFixer\Finder;
 $finder = Finder::create()
     ->in([
         __DIR__ . '/bin',
-        __DIR__ . '/card',
-        __DIR__ . '/cards',
-        __DIR__ . '/deck',
-        __DIR__ . '/decks',
-        __DIR__ . '/header.php',
-        __DIR__ . '/help',
-        __DIR__ . '/index.php',
-        __DIR__ . '/languages',
+        __DIR__ . '/public',
         __DIR__ . '/src',
     ])
     ->name('*.php')
