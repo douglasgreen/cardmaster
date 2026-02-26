@@ -1,7 +1,6 @@
 {
 
-  "_version": "1.1.0",
-  "_modified": "2026-02-22",
+  "modified": "2026-02-26",
   "name": "douglasgreen/cardmaster",
   "description": "Flashcard review program",
   "type": "project",
