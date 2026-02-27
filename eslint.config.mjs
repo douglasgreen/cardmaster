@@ -10,57 +10,27 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 // ------------------------------------------------------------------
 // Global ignore patterns (replaces .eslintignore)
 // ------------------------------------------------------------------
-const ignorePatterns = [
-    // Build / tooling directories
-    'dist/**',
-    'node_modules/**',
-    'coverage/**',
-    '*.config.*',
-    'playwright-report/**',
-    'test-results/**',
-    'build/**',
-    '.cache/**',
-    '.next/**',
-    // Composer / PHP
-    'composer.lock',
-    'vendor/**',
-    // ESLint cache
-    '.eslintcache',
-    // Grunt
-    '.grunt/**',
-    // Husky
-    '.husky/_/**',
-    // Minified assets
-    '*.min.*',
-    // Node REPL history & npm stuff
-    '.node_repl_history',
-    '.npm/**',
-    'npm-debug.log*',
-    'package-lock.json',
-    // PHPUnit
-    '.phpunit.result.cache',
-    // Python
-    '*.pyc',
-    '__pycache__/**',
-    '*.pyo',
-    // Symfony
-    '.env.local.php',
-    'parameters.yml',
-    'var/**',
+const ignorePatterns =[
+    'dist/**', 'node_modules/**', 'coverage/**', '*.config.*',
+    'playwright-report/**', 'test-results/**', 'build/**', '.cache/**',
+    '.next/**', 'composer.lock', 'vendor/**', '.eslintcache', '.grunt/**',
+    '.husky/_/**', '*.min.*', '.node_repl_history', '.npm/**',
+    'npm-debug.log*', 'package-lock.json', '.phpunit.result.cache',
+    '*.pyc', '__pycache__/**', '*.pyo', '.env.local.php',
+    'parameters.yml', 'var/**',
 ];
 
 // ------------------------------------------------------------------
 // Export the flat config
 // ------------------------------------------------------------------
-export default tseslint.config(
-    // ----------------------------------------------------------------
+export default[
+    // Global ignores must be isolated in their own config object
+    { ignores: ignorePatterns },
+
     // Base JavaScript
-    // ----------------------------------------------------------------
     js.configs.recommended,
 
-    // ----------------------------------------------------------------
-    // Global language options & parsers
-    // ----------------------------------------------------------------
+    // Global language options and standard JS rules
     {
         languageOptions: {
             globals: {
@@ -69,11 +39,12 @@ export default tseslint.config(
                 ...globals.es2023,
             },
         },
+        rules: {
+            'no-console': ['warn', { allow:['warn', 'error'] }],
+        },
     },
 
-    // ----------------------------------------------------------------
     // Security baseline
-    // ----------------------------------------------------------------
     {
         plugins: { security: pluginSecurity },
         rules: {
@@ -82,9 +53,7 @@ export default tseslint.config(
         },
     },
 
-    // ----------------------------------------------------------------
     // Code‑quality (unicorn)
-    // ----------------------------------------------------------------
     {
         plugins: { unicorn: pluginUnicorn },
         rules: {
@@ -93,15 +62,15 @@ export default tseslint.config(
         },
     },
 
-    // ----------------------------------------------------------------
-    // Global ignore patterns (replaces .eslintignore)
-    // ----------------------------------------------------------------
+    // Accessibility for Vue/JSX
     {
-        ignores: ignorePatterns,
+        files:['**/*.{vue,jsx,tsx}'],
+        plugins: { 'jsx-a11y': pluginJsxA11y },
+        rules: {
+            ...pluginJsxA11y.configs.recommended.rules,
+        },
     },
 
-    // ----------------------------------------------------------------
     // Prettier – must be last to override conflicting rules
-    // ----------------------------------------------------------------
     eslintConfigPrettier,
-);
+];
